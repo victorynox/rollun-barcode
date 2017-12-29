@@ -1,0 +1,47 @@
+<?php $this->headTitle('Warning item'); ?>
+
+<h2>Товары</h2>
+
+<div class="row">
+    <div class="col-md-offset-4 col-md-4">
+        <h2>Выбирите список баркотод.</h2>
+        <ul>
+            <?php foreach ($this->barcodeStores as $barcodeStore) : ?>
+                <li>
+                    <a href="<?php echo $this->url('rocky-barcode') ?>?selectBarcodeStore=<?php echo $barcodeStore ?>">
+                        <?php echo $barcodeStore ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-offset-4 col-md-4">
+        <h2>Сканирование <?php echo $this->selectBarcodeStore ?> barcode .</h2>
+        <form enctype="multipart/form-data" action="<?php echo $this->url('rocky-barcode') ?>" method="GET">
+            Barcode товара: <input name="barcode" type="text"/>
+            <?php if (isset($this->selectBarcodeStore)) : ?>
+                <input name="selectBarcodeStore" type="text" value="<?php echo $this->selectBarcodeStore ?>"/>
+            <?php endif; ?>
+            <input type="submit" value="Посмотреть товар"/>
+        </form>
+    </div>
+</div>
+
+<?php if (isset($this->Rockypart)) : ?>
+    <div class="row">
+        <div class="col-md-offset-1 col-md-4">
+            <h3>Товар: <?php echo $this->info->Rockypart ?> </h3>
+            <ul>
+                <?php foreach ($this->info as $attrName => $value) : ?>
+                    <?php if (preg_match('/(?<BoxName>Box[\d]+)quantity/', $attrName, $match)) : ?>
+                        <li>  <?php echo $match['BoxName'] ?> : <?php echo $value ?> </li>;
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </ul>
+            <img src="<?php echo $this->info->Imagelink ?>" style="width: 100%;">
+        </div>
+    </div>
+<?php endif; ?>
