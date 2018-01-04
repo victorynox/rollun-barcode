@@ -6,7 +6,7 @@ namespace rollun\barcode\Installer;
 
 use Composer\IO\IOInterface;
 use Interop\Container\ContainerInterface;
-use rollun\barcode\DataStore\Barcode;
+use rollun\barcode\DataStore\BarcodeCsv;
 use rollun\barcode\DirectoryScanner;
 use rollun\datastore\DataStore\Factory\CsvAbstractFactory;
 use rollun\datastore\DataStore\Installers\CsvInstaller;
@@ -36,7 +36,7 @@ class BarcodeDataStoreInstaller extends InstallerAbstract
         foreach ($barcodeFile as $name => $path) {
             if(!$this->container->has($name)) {
                 $config[CsvAbstractFactory::KEY_DATASTORE][$name] = [
-                    CsvAbstractFactory::KEY_CLASS => Barcode::class,
+                    CsvAbstractFactory::KEY_CLASS => BarcodeCsv::class,
                     CsvAbstractFactory::KEY_FILENAME => $path,
                     CsvAbstractFactory::KEY_DELIMITER => ",",
                 ];

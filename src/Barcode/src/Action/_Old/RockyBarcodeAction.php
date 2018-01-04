@@ -13,7 +13,7 @@ use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use rollun\barcode\BarcodeDataStorePluginManager;
-use rollun\barcode\DataStore\ScansInfo;
+use rollun\barcode\DataStore\ScansInfoCsv;
 use rollun\barcode\DirectoryScanner;
 use rollun\datastore\DataStore\Interfaces\DataStoresInterface;
 use rollun\datastore\Rql\RqlQuery;
@@ -72,13 +72,13 @@ class RockyBarcodeAction implements MiddlewareInterface
             if (isset($queryParams[self::BARCODE])) {
                 $barcode = $queryParams[self::BARCODE];
                 $query = new Query();
-                $query->setQuery(new EqNode(ScansInfo::FIELD_FNSKU, $barcode));
+                $query->setQuery(new EqNode(ScansInfoCsv::FIELD_FNSKU, $barcode));
                 $result = $barcodeStore->query($query);
                 $this->scanBarcode->create([
-                    ScansInfo::FIELD_FNSKU => $barcode,
-                    ScansInfo::FIELD_SCAN_TIME => time(),
-                    ScansInfo::FIELD_BARCODE_STORAGE_NAME => $barcodeStorageName,
-                    ScansInfo::FIELD_IP => $this->getClientIp($request)
+                    ScansInfoCsv::FIELD_FNSKU => $barcode,
+                    ScansInfoCsv::FIELD_SCAN_TIME => time(),
+                    ScansInfoCsv::FIELD_BARCODE_STORAGE_NAME => $barcodeStorageName,
+                    ScansInfoCsv::FIELD_IP => $this->getClientIp($request)
                 ]);
                 if (empty($result)) {
                     $responseData["notify"] = "Товар с barcode: $barcode не найден";

@@ -2,13 +2,19 @@
 
 namespace rollun\barcode;
 
-use rollun\amazon\Api\Middleware\Factory\RockyBarcodeFactory;
-use rollun\amazon\Api\Middleware\Factory\StatsBarcodeFactory;
-use rollun\barcode\Action\RockyBarcodeAction;
-use rollun\barcode\Action\StatsBarcodeAction;
-use rollun\barcode\DataStore\ScansInfo;
-use rollun\datastore\DataStore\CsvBase;
+use rollun\actionrender\Factory\ActionRenderAbstractFactory;
+use rollun\barcode\Action\SearchBarcode;
+use rollun\barcode\Action\Factory\SearchBarcodeFactory;
+use rollun\barcode\Action\Factory\SelectParcelFactory;
+use rollun\barcode\Action\SelectParcel;
+use rollun\barcode\DataStore\BarcodeAspect;
+use rollun\barcode\DataStore\BarcodeCsv;
+use rollun\barcode\DataStore\BarcodeInterface;
+use rollun\barcode\DataStore\Factory\BarcodeAspectAbstractFactory;
+use rollun\barcode\DataStore\ScansInfoCsv;
+use rollun\barcode\DataStore\ScansInfoInterface;
 use rollun\datastore\DataStore\Factory\CsvAbstractFactory;
+use rollun\datastore\DataStore\Factory\DataStoreAbstractFactory;
 use rollun\installer\Command;
 
 /**
@@ -30,7 +36,8 @@ class ConfigProvider
     {
         return [
             'dependencies' => $this->getDependencies(),
-            CsvAbstractFactory::KEY_DATASTORE => $this->getDataStore(),
+            DataStoreAbstractFactory::KEY_DATASTORE => $this->getDataStore(),
+            ActionRenderAbstractFactory::KEY => $this->getActionRenderAbstractFactoryConfig(),
             'templates' => $this->getTemplates(),
         ];
     }
@@ -44,10 +51,17 @@ class ConfigProvider
     {
         return [
             'invokables' => [],
-            'factories' => [
-                RockyBarcodeAction::class => RockyBarcodeFactory::class,
-                StatsBarcodeAction::class => StatsBarcodeFactory::class,
+            "abstract_factories" => [
+                BarcodeAspectAbstractFactory::class
             ],
+            'factories' => [
+                SearchBarcode::class => SearchBarcodeFactory::class,
+                SelectParcel::class =>  SelectParcelFactory::class,
+            ],
+            "aliases" => [
+                BarcodeInterface::class => BarcodeCsv::class,
+                ScansInfoInterface::class => ScansInfoCsv::class
+            ]
         ];
     }
 
@@ -58,10 +72,18 @@ class ConfigProvider
     public function getDataStore()
     {
         return [
-            ScansInfo::class => [
-                CsvAbstractFactory::KEY_CLASS => CsvBase::class,
+            ScansInfoCsv::class => [
+                CsvAbstractFactory::KEY_CLASS => ScansInfoCsv::class,
                 CsvAbstractFactory::KEY_FILENAME => Command::getDataDir() . "barcode" . DIRECTORY_SEPARATOR . "barcodeScansInfo.csv",
                 CsvAbstractFactory::KEY_DELIMITER => ",",
+            ],
+            BarcodeCsv::class => [
+                CsvAbstractFactory::KEY_CLASS => BarcodeCsv::class,
+                CsvAbstractFactory::KEY_FILENAME => Command::getDataDir() . "barcode" . DIRECTORY_SEPARATOR . "rockyBarcode.csv",
+                CsvAbstractFactory::KEY_DELIMITER => ",",
+            ],
+            BarcodeAspect::class => [
+                BarcodeAspectAbstractFactory::KEY_DATASTORE => BarcodeInterface::class,
             ]
         ];
     }
@@ -76,9 +98,25 @@ class ConfigProvider
         return [
             'paths' => [
                 'app' => [__DIR__ . '/../templates/app'],
-                'error' => [__DIR__ . '/../templates/error'],
-                'layout' => [__DIR__ . '/../templates/layout'],
+                'barcode' => [__DIR__ . '/../templates/barcode'],
             ],
+        ];
+    }
+
+    /**
+     * Return ActionRender service config
+     */
+    public function getActionRenderAbstractFactoryConfig()
+    {
+        return [
+            "search-barcode-service" => [
+                ActionRenderAbstractFactory::KEY_ACTION_MIDDLEWARE_SERVICE => SearchBarcode::class,
+                ActionRenderAbstractFactory::KEY_RENDER_MIDDLEWARE_SERVICE => "simpleHtmlJsonRendererLLPipe",
+            ],
+            "select-parcel-service" => [
+                ActionRenderAbstractFactory::KEY_ACTION_MIDDLEWARE_SERVICE => SelectParcel::class,
+                ActionRenderAbstractFactory::KEY_RENDER_MIDDLEWARE_SERVICE => "simpleHtmlJsonRendererLLPipe",
+            ]
         ];
     }
 }

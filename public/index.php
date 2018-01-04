@@ -14,6 +14,8 @@ require 'vendor/autoload.php';
 call_user_func(function () {
     /** @var \Psr\Container\ContainerInterface $container */
     $container = require 'config/container.php';
+    /** @noinspection PhpParamsInspection */
+    \rollun\dic\InsideConstruct::setContainer($container);
 
     /** @var \Zend\Expressive\Application $app */
     $app = $container->get(\Zend\Expressive\Application::class);

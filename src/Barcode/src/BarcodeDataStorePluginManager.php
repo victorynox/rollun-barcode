@@ -3,7 +3,7 @@
 
 namespace rollun\barcode;
 
-use rollun\barcode\DataStore\Barcode as BarcodeDataStore;
+use rollun\barcode\DataStore\BarcodeCsv as BarcodeDataStore;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\Exception\InvalidServiceException;
 

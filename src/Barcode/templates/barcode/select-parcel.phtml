@@ -1,0 +1,15 @@
+<?php $this->headTitle($this->title); ?>
+
+<h1 class="page-header"><?= $this->title ?></h1>
+
+<?php if (!empty($this->parcelNumbers)): ?>
+    <ul>
+        <?php foreach ($this->parcelNumbers as $parcelNumber): ?>
+            <li>
+                <a href="<?php echo $this->url('search-barcode', ["parcel_number" => $parcelNumber]) ?>"><?= $parcelNumber ?></a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php else: ?>
+    <p>Parcel not exist.</p>
+<?php endif; ?>

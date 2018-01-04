@@ -11,11 +11,20 @@ $cacheConfig = [
 ];
 
 $aggregator = new ConfigAggregator([
+    \Zend\Db\ConfigProvider::class,
+    \Zend\Validator\ConfigProvider::class,
+    \Zend\Cache\ConfigProvider::class,
+    \Zend\Session\ConfigProvider::class,
+    \Zend\Filter\ConfigProvider::class,
+    \Zend\Serializer\ConfigProvider::class,
+    \Zend\I18n\ConfigProvider::class,
     // Include cache configuration
     new ArrayProvider($cacheConfig),
-
-    // Default App module config
+    rollun\barcode\ConfigProvider::class,
+    rollun\datastore\ConfigProvider::class,
+    rollun\actionrender\ConfigProvider::class,
     App\ConfigProvider::class,
+    rollun\Crud\ConfigProvider::class,
 
     // Load application config in a pre-defined order in such a way that local settings
     // overwrite global settings. (Loaded as first to last):

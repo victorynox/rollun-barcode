@@ -30,3 +30,21 @@
 
 $app->get('/', App\Action\HomePageAction::class, 'home');
 $app->get('/api/ping', App\Action\PingAction::class, 'api.ping');
+
+if ($container->has('api-datastore')) {
+    $app->route(
+        '/api/datastore[/{resourceName}[/{id}]]',
+        'api-datastore',
+        ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+        'api-datastore');
+}
+$app->get(
+    '/barcode',
+    "select-parcel-service",
+    'select-parcel'
+);
+$app->get(
+    '/barcode/{parcel_number}',
+    "search-barcode-service",
+    'search-barcode'
+);

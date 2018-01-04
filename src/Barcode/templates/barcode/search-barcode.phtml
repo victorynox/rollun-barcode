@@ -1,0 +1,40 @@
+<?php $this->headTitle($this->title); ?>
+
+<h1 class="page-header"><?= $this->title ?></h1>
+
+<h2><a href="<?php echo $this->url("select-parcel") ?>">Parcel <?= $this->parcelNumber ?></a></h2>
+
+<?php /* Search form */ ?>
+<div class="row">
+    <div class="col-md-offset-4 col-md-4">
+        <h3>Barcode scanning</h3>
+        <form enctype="multipart/form-data"
+              action="<?php echo $this->url('search-barcode', ["parcel_number" => $this->parcelNumber]) ?>"
+              method="GET">
+            <div class="form-group">
+                <label for="pwd"> Item barcode:</label>
+                <input class="form-control" name="barcode" type="text"/>
+                <input class="btn btn-info" type="submit" value="View item"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-offset-1 col-md-4">
+        <?php if (isset($this->barcode) && !empty($this->barcode)): ?>
+            <h4>Item with barcode: <?php echo $this->barcode ?></h4>
+            <?php if (isset($this->notify)) : ?>
+                <p><?php echo $this->notify ?></p>
+            <?php else: ?>
+                <h3>Item: <?php echo $this->info['part_number'] ?></h3>
+                <ul>
+                    <?php foreach ($this->info['quantity'] as $boxName => $boxQuantity): ?>
+                        <li><?= $boxName ?>: <?= $boxQuantity ?></li>
+                    <?php endforeach; ?>
+                </ul>
+                <img src="<?php echo $this->info['image_link'] ?>" style="width: 100%;">
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+</div>
