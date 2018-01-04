@@ -44,20 +44,9 @@ class SelectParcel implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $query = new RqlQuery();
-        $query->setSelect(new AggregateSelectNode([
-            "count(".$this->barcodeDataStore->getIdentifier().")",
-            BarcodeDataStoreInterface::FIELD_PARCEL_NUMBER
-        ]));
-        $query->setGroupby(new GroupbyNode([BarcodeDataStoreInterface::FIELD_PARCEL_NUMBER]));
-        $result = $this->barcodeDataStore->query($query);
-        $parcelNumbers = [];
-        foreach ($result as $item) {
-            $parcelNumbers[] = $item[BarcodeDataStoreInterface::FIELD_PARCEL_NUMBER];
-        }
         $responseData = [
             'title' => "Select parcel",
-            'parcelNumbers' => $parcelNumbers
+            'parcelNumbers' => $this->barcodeDataStore->getParcelNumbers()
         ];
         $request = $request->withAttribute("responseData", $responseData);
         $request = $request->withAttribute(HtmlParamResolver::KEY_ATTRIBUTE_TEMPLATE_NAME, "barcode::select-parcel");

@@ -7,6 +7,7 @@ use rollun\datastore\DataStore\DataStoreException;
 use rollun\utils\IdGenerator;
 use rollun\utils\Json\Exception;
 use rollun\utils\Json\Serializer;
+use Xiag\Rql\Parser\Node\LimitNode;
 use Xiag\Rql\Parser\Node\Query\LogicOperator\AndNode;
 use Xiag\Rql\Parser\Node\Query\ScalarOperator\EqNode;
 use Xiag\Rql\Parser\Query;
@@ -14,6 +15,7 @@ use Xiag\Rql\Parser\Query;
 /**
  * Class BarcodeAspect
  * Prepare data to save in table
+ * @example
  * [
  *      [
  *          "FNSKU" =>
@@ -47,8 +49,9 @@ use Xiag\Rql\Parser\Query;
  * ]
  *
  * @package rollun\barcode\DataStore
+ * @property BarcodeInterface $dataStore
  */
-class BarcodeAspect extends AspectAbstract implements BarcodeInterface
+class ParcelBarcodeAspect extends AspectAbstract implements BarcodeInterface
 {
     const BOX_NUMBER_QUANTITY_PREFIX = "Box";
 
@@ -139,8 +142,10 @@ class BarcodeAspect extends AspectAbstract implements BarcodeInterface
     {
         $repackItem = [];
         foreach ($this->mappedFields as $field => $mappedField) {
-            if(isset($item[$field])) {
+            if (isset($item[$field])) {
                 $repackItem[$mappedField] = $item[$field];
+            } elseif (isset($item[$mappedField])) {
+                $repackItem[$mappedField] = $item[$mappedField];
             }
         }
         return $repackItem;
@@ -155,12 +160,12 @@ class BarcodeAspect extends AspectAbstract implements BarcodeInterface
     {
         $tryCount = 0;
         do {
+            if($tryCount >= static::GEN_ID_MAX_TRY) {
+                throw new DataStoreException("Can't generate id.");
+            }
             $id = $this->idGenerator->generate();
             $tryCount++;
-        } while ($this->has($id) || $tryCount < static::GEN_ID_MAX_TRY);
-        if ($tryCount >= static::GEN_ID_MAX_TRY) {
-            throw new DataStoreException("Can't generate id.");
-        }
+        } while($this->has($id));
         return $id;
     }
 
@@ -250,5 +255,90 @@ class BarcodeAspect extends AspectAbstract implements BarcodeInterface
         }
         $query->setQuery($queryNodes);
         return $query;
+    }
+
+    /**
+     * Return array with all different parcel name.
+     * [
+     *    "12ms931s",
+     *    "1656m12931s",
+     *    "16Av56m123",
+     * ]
+     * @return array
+     */
+    public function getParcelNumbers()
+    {
+        return $this->dataStore->getParcelNumbers();
+    }
+
+    /**
+     * Remove all item which contained in selected parcel.
+     * @param $parcelNumber
+     * @return void
+     */
+    public function deleteParcel($parcelNumber)
+    {
+        $this->dataStore->deleteParcel($parcelNumber);
+    }
+
+    /**
+     * Delete all item in parcel
+     * @return int|mixed|void
+     */
+    public function deleteAll()
+    {
+        $this->deleteParcel($this->parcelNumber);
+    }
+
+    /**
+     * Delete item from a parcel
+     * @param int|string $id
+     * @return array|mixed|void
+     */
+    public function delete($id)
+    {
+        if ($this->has($id)) {
+            $this->dataStore->delete($id);
+        }
+    }
+
+    /**
+     * Return item only if parcel contained he
+     * @param int|string $id
+     * @return array|null
+     */
+    public function read($id)
+    {
+        $query = new Query();
+        $query->setQuery(new AndNode([
+            new EqNode(static::FIELD_ID, $id),
+            new EqNode(static::FIELD_PARCEL_NUMBER, $this->parcelNumber),
+        ]));
+        $query->setLimit(new LimitNode(1));
+        $result = $this->dataStore->query($query);
+        if (!empty($result)) {
+            return $result[0];
+        }
+        return null;
+    }
+
+    /**
+     * Check if  item has in parcel
+     * @param int|string $id
+     * @return bool
+     */
+    public function has($id)
+    {
+        return $this->read($id) != null;
+    }
+
+
+    /**
+     * @param $parcelNumber
+     * @return boolean
+     */
+    public function hasParcel($parcelNumber)
+    {
+        return $this->dataStore->hasParcel($parcelNumber);
     }
 }

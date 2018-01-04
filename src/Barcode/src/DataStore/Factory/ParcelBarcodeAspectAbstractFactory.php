@@ -7,16 +7,16 @@ use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use rollun\barcode\DataStore\BarcodeAspect;
+use rollun\barcode\DataStore\ParcelBarcodeAspect;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\AbstractFactoryInterface;
 
-class BarcodeAspectAbstractFactory implements AbstractFactoryInterface
+class ParcelBarcodeAspectAbstractFactory implements AbstractFactoryInterface
 {
     const KEY = "dataStore";
 
-    const KEY_CLASS = BarcodeAspect::class;
+    const KEY_CLASS = ParcelBarcodeAspect::class;
 
     const KEY_DATASTORE = "dataStore";
 
@@ -39,14 +39,14 @@ class BarcodeAspectAbstractFactory implements AbstractFactoryInterface
     /**
      * Create an object
      * [
-     *      BarcodeAspect::class => [
-     *          BarcodeAspectAbstractFactory::KEY_DATASTORE => Barcode::class,
+     *      ParcelBarcodeAspect::class => [
+     *          ParcelBarcodeAspectAbstractFactory::KEY_DATASTORE => Barcode::class,
      *      ]
      * ]
      * @param  ContainerInterface $container
      * @param  string $requestedName
      * @param  null|array $options
-     * @return BarcodeAspect
+     * @return ParcelBarcodeAspect
      * @throws ServiceNotFoundException if unable to resolve the service.
      * @throws ServiceNotCreatedException if an exception is raised when
      *     creating a service.
@@ -76,9 +76,9 @@ class BarcodeAspectAbstractFactory implements AbstractFactoryInterface
             throw new ServiceNotCreatedException("DataStore " . $serviceConfig[static::KEY_DATASTORE] . " not created.", $e->getCode(), $e);
         }
         if(!preg_match(static::SERVICE_NAME_PATTERN, $requestedName, $match)) {
-            throw new ServiceNotCreatedException("Requested service $requestedName is not BarcodeAspect compatible.");
+            throw new ServiceNotCreatedException("Requested service $requestedName is not ParcelBarcodeAspect compatible.");
         }
         $parcelNumber = $match['parcel_number'];
-        return new BarcodeAspect($dataStore, $parcelNumber);
+        return new ParcelBarcodeAspect($dataStore, $parcelNumber);
     }
 }

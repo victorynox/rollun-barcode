@@ -1,0 +1,20 @@
+<?php $this->headTitle($this->title); ?>
+
+<h1 class="page-header"><?= $this->title ?></h1>
+
+<?php
+$this->mainMenu()->addItem("Scans Info", $this->url("scans-info"));
+$this->mainMenu()->addItem("View Parcels", $this->url("view-parcels"));
+?>
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>Confirm to remove parcel <?= $this->parcelNumber ?></h2>
+        <div class="col-md-4">
+            <a class="btn btn-danger" href="<?php echo $this->url('delete-parcel', [], ["confirm" => true]) ?>">Yes</a>
+        </div>
+        <div class="col-md-4">
+            <a class="btn btn-default" href="<?php echo $this->url('delete-parcel', [], ["confirm" => false]) ?>">No</a>
+        </div>
+    </div>
+</div>

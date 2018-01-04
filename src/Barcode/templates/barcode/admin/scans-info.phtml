@@ -1,0 +1,8 @@
+<?php $this->headTitle($this->title); ?>
+    <h1 class="page-header"><?= $this->title ?></h1>
+<?php
+$this->mainMenu()->addItem("Scans Info", $this->url("scans-info"));
+$this->mainMenu()->addItem("View Parcels", $this->url("view-parcels"));
+?>
+
+<?= $this->crudTable($this->url("api-datastore", ["resourceName" => $this->table['dataStoreName']]), $this->table['title']) ?>

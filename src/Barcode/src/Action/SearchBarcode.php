@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use rollun\actionrender\Renderer\Html\HtmlParamResolver;
 use rollun\barcode\DataStore\BarcodeInterface as BarcodeDataStoreInterface;
-use rollun\barcode\DataStore\Factory\BarcodeAspectAbstractFactory;
+use rollun\barcode\DataStore\Factory\ParcelBarcodeAspectAbstractFactory;
 use rollun\barcode\DataStore\ScansInfoInterface as ScansInfoDataStoreInterface;
 use rollun\utils\Json\Serializer;
 use Xiag\Rql\Parser\Node\LimitNode;
@@ -99,7 +99,7 @@ class SearchBarcode implements MiddlewareInterface
 
         $queryParams = $request->getQueryParams();
         if (!isset($queryParams[static::KEY_QUERY_BARCODE])) {
-            $responseData["barcodeAspectName"] = BarcodeAspectAbstractFactory::SERVICE_NAME_PREFIX . $parcelNumber;
+            $responseData["barcodeAspectName"] = ParcelBarcodeAspectAbstractFactory::SERVICE_NAME_PREFIX . $parcelNumber;
         } else {
             $fnsku = $queryParams[static::KEY_QUERY_BARCODE];
             //get barcode

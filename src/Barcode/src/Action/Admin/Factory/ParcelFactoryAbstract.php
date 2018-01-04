@@ -1,21 +1,21 @@
 <?php
 
-namespace rollun\barcode\Action\Factory;
+namespace rollun\barcode\Action\Admin\Factory;
 
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use rollun\barcode\Action\SearchBarcode;
+use rollun\barcode\Action\Admin\ParcelAbstract;
 use rollun\barcode\DataStore\BarcodeInterface;
-use rollun\barcode\DataStore\ScansInfoInterface;
+use Zend\Expressive\Helper\UrlHelper;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
-class SearchBarcodeFactory implements FactoryInterface
+abstract class ParcelFactoryAbstract implements FactoryInterface
 {
-    const KEY = SearchBarcodeFactory::class;
+    const KEY = ParcelFactoryAbstract::class;
 
     /**
      * Barcode dataStore service name
@@ -24,17 +24,16 @@ class SearchBarcodeFactory implements FactoryInterface
     const KEY_BARCODE_DATASTORE_SERVICE = "barcodeDataStoreService";
 
     /**
-     * ScansInfo dataStore service name
-     * Non required. By default use rollun\barcode\DataStore\ScansInfoInterface::class
+     * Barcode dataStore service name
+     * Non required. By default use use Zend\Expressive\Helper\UrlHelper::class
      */
-    const KEY_SCANS_INFO_DATASTORE_SERVICE = "scansInfoDataStoreService";
+    const KEY_URL_HELPER_SERVICE = "urlHelperService";
+
+    const INSTANCE_CLASS = ParcelAbstract::class;
 
     /**
      * Create an object
-     * [
-     *      SearchBarcodeFactory::KEY_BARCODE_DATASTORE_SERVICE => BarcodeCsv::class,
-     *      SearchBarcodeFactory::KEY_SCANS_INFO_DATASTORE_SERVICE => ScamsInfoTable::class,
-     * ]
+     *
      * @param  ContainerInterface $container
      * @param  string $requestedName
      * @param  null|array $options
@@ -63,18 +62,18 @@ class SearchBarcodeFactory implements FactoryInterface
         } catch (ContainerExceptionInterface $e) {
             throw new ServiceNotCreatedException("Can't get $barcodeDataStoreServiceName from container", $e->getCode(), $e);
         }
-
-        //get scansInfo dataStore
-        $scansInfoDataStoreServiceName = isset($config[static::KEY][static::KEY_SCANS_INFO_DATASTORE_SERVICE]) ?
-            $config[static::KEY][static::KEY_SCANS_INFO_DATASTORE_SERVICE] : ScansInfoInterface::class;
+        //get urlHelper
+        $urlHelperServiceName = isset($config[static::KEY][static::KEY_URL_HELPER_SERVICE]) ?
+            $config[static::KEY][static::KEY_URL_HELPER_SERVICE] : UrlHelper::class;
         try {
-            $scansInfoDataStore = $container->get($scansInfoDataStoreServiceName);
+            $urlHelper = $container->get($urlHelperServiceName);
         } catch (NotFoundExceptionInterface $e) {
-            throw new ServiceNotCreatedException("Not found $scansInfoDataStoreServiceName in container.", $e->getCode(), $e);
+            throw new ServiceNotCreatedException("Not found $urlHelperServiceName in container.", $e->getCode(), $e);
         } catch (ContainerExceptionInterface $e) {
-            throw new ServiceNotCreatedException("Can't get $scansInfoDataStoreServiceName from container", $e->getCode(), $e);
+            throw new ServiceNotCreatedException("Can't get $urlHelperServiceName from container", $e->getCode(), $e);
         }
 
-        return new SearchBarcode($barcodeDataStore, $scansInfoDataStore);
+        $class = static::INSTANCE_CLASS;
+        return new $class($barcodeDataStore, $urlHelper);
     }
 }

@@ -1,0 +1,52 @@
+<?php $this->headTitle($this->title); ?>
+
+<h1 class="page-header"><?= $this->title ?></h1>
+
+<?php
+$this->mainMenu()->addItem("Scans Info", $this->url("scans-info"));
+$this->mainMenu()->addItem("View Parcels", $this->url("view-parcels"));
+?>
+
+<style>
+    .top-buffer {
+        margin-top: 20px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-offset-1 col-md-4">
+        <div class="row">
+            <div class="col-md-4">
+                <form enctype="multipart/form-data" action="<?php echo $this->url('add-parcel') ?>" method="GET">
+                    <div class="row">
+                        <label for="pwd">
+                            Parcel number:<input class="form-control" name="parcel_number" type="text"/>
+                        </label>
+                    </div>
+                    <div class="row">
+                        <input class="btn btn-info" type="submit" value="Add Parcel"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row top-buffer"></div>
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Parcel List </h3>
+                <ul class="list-group">
+                    <?php if (!empty($this->parcelNumbers)) : ?>
+                        <?php foreach ($this->parcelNumbers as $parcelNumber): ?>
+                            <li class="list-group-item">
+                                <div>Parcel: <?= $parcelNumber ?></div>
+                                <a href="<?= $this->url("edit-parcel", ["parcel_number" => $parcelNumber]) ?>">Edit</a>
+                                <a href="<?= $this->url("delete-parcel", ["parcel_number" => $parcelNumber]) ?>">Remove</a>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li class="list-group-item">Parcel empty</li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

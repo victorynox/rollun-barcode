@@ -3,19 +3,21 @@
 namespace rollun\barcode;
 
 use rollun\actionrender\Factory\ActionRenderAbstractFactory;
+use rollun\barcode\Action\Admin;
 use rollun\barcode\Action\SearchBarcode;
 use rollun\barcode\Action\Factory\SearchBarcodeFactory;
 use rollun\barcode\Action\Factory\SelectParcelFactory;
 use rollun\barcode\Action\SelectParcel;
-use rollun\barcode\DataStore\BarcodeAspect;
+use rollun\barcode\DataStore\ParcelBarcodeAspect;
 use rollun\barcode\DataStore\BarcodeCsv;
 use rollun\barcode\DataStore\BarcodeInterface;
-use rollun\barcode\DataStore\Factory\BarcodeAspectAbstractFactory;
+use rollun\barcode\DataStore\Factory\ParcelBarcodeAspectAbstractFactory;
 use rollun\barcode\DataStore\ScansInfoCsv;
 use rollun\barcode\DataStore\ScansInfoInterface;
 use rollun\datastore\DataStore\Factory\CsvAbstractFactory;
 use rollun\datastore\DataStore\Factory\DataStoreAbstractFactory;
 use rollun\installer\Command;
+use Zend\ServiceManager\Factory\InvokableFactory;
 
 /**
  * The configuration provider for the App module
@@ -52,14 +54,21 @@ class ConfigProvider
         return [
             'invokables' => [],
             "abstract_factories" => [
-                BarcodeAspectAbstractFactory::class
+                ParcelBarcodeAspectAbstractFactory::class
             ],
             'factories' => [
                 SearchBarcode::class => SearchBarcodeFactory::class,
-                SelectParcel::class =>  SelectParcelFactory::class,
+                SelectParcel::class => SelectParcelFactory::class,
+
+                Admin\ScansInfo::class => InvokableFactory::class,
+                Admin\DeleteParcel::class => Admin\Factory\DeleteParcelFactory::class,
+                Admin\EditParcel::class => Admin\Factory\EditParcelFactory::class,
+                Admin\AddParcel::class => Admin\Factory\AddParcelFactory::class,
+                Admin\ViewParcels::class => Admin\Factory\ViewParcelsFactory::class,
             ],
             "aliases" => [
                 BarcodeInterface::class => BarcodeCsv::class,
+                "ScansInfo" => ScansInfoInterface::class,
                 ScansInfoInterface::class => ScansInfoCsv::class
             ]
         ];
@@ -82,8 +91,8 @@ class ConfigProvider
                 CsvAbstractFactory::KEY_FILENAME => Command::getDataDir() . "barcode" . DIRECTORY_SEPARATOR . "rockyBarcode.csv",
                 CsvAbstractFactory::KEY_DELIMITER => ",",
             ],
-            BarcodeAspect::class => [
-                BarcodeAspectAbstractFactory::KEY_DATASTORE => BarcodeInterface::class,
+            ParcelBarcodeAspect::class => [
+                ParcelBarcodeAspectAbstractFactory::KEY_DATASTORE => BarcodeInterface::class,
             ]
         ];
     }
@@ -116,7 +125,28 @@ class ConfigProvider
             "select-parcel-service" => [
                 ActionRenderAbstractFactory::KEY_ACTION_MIDDLEWARE_SERVICE => SelectParcel::class,
                 ActionRenderAbstractFactory::KEY_RENDER_MIDDLEWARE_SERVICE => "simpleHtmlJsonRendererLLPipe",
-            ]
+            ],
+            //admins
+            "scans-info-service" => [
+                ActionRenderAbstractFactory::KEY_ACTION_MIDDLEWARE_SERVICE => Admin\ScansInfo::class,
+                ActionRenderAbstractFactory::KEY_RENDER_MIDDLEWARE_SERVICE => "simpleHtmlJsonRendererLLPipe",
+            ],
+            "delete-parcel-service" => [
+                ActionRenderAbstractFactory::KEY_ACTION_MIDDLEWARE_SERVICE => Admin\DeleteParcel::class,
+                ActionRenderAbstractFactory::KEY_RENDER_MIDDLEWARE_SERVICE => "simpleHtmlJsonRendererLLPipe",
+            ],
+            "edit-parcel-service" => [
+                ActionRenderAbstractFactory::KEY_ACTION_MIDDLEWARE_SERVICE => Admin\EditParcel::class,
+                ActionRenderAbstractFactory::KEY_RENDER_MIDDLEWARE_SERVICE => "simpleHtmlJsonRendererLLPipe",
+            ],
+            "add-parcel-service" => [
+                ActionRenderAbstractFactory::KEY_ACTION_MIDDLEWARE_SERVICE => Admin\AddParcel::class,
+                ActionRenderAbstractFactory::KEY_RENDER_MIDDLEWARE_SERVICE => "simpleHtmlJsonRendererLLPipe",
+            ],
+            "view-parcels-service" => [
+                ActionRenderAbstractFactory::KEY_ACTION_MIDDLEWARE_SERVICE => Admin\ViewParcels::class,
+                ActionRenderAbstractFactory::KEY_RENDER_MIDDLEWARE_SERVICE => "simpleHtmlJsonRendererLLPipe",
+            ],
         ];
     }
 }

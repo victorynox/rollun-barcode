@@ -38,13 +38,54 @@ if ($container->has('api-datastore')) {
         ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
         'api-datastore');
 }
-$app->get(
+$app->route(
     '/barcode',
     "select-parcel-service",
+    ["GET"],
     'select-parcel'
 );
-$app->get(
+$app->route(
     '/barcode/{parcel_number}',
     "search-barcode-service",
+    ["GET"],
     'search-barcode'
+);
+
+//admin
+// scans-info-service
+// delete-parcel-service
+// edit-parcel-service
+// add-parcel-service
+// view-parcels-service
+
+$app->route(
+    '/admin/scans_info',
+    "scans-info-service",
+    ["GET"],
+    'scans-info'
+);
+
+$app->route(
+    '/admin/parcels',
+    "view-parcels-service",
+    ["GET"],
+    'view-parcels'
+);
+$app->route(
+    '/admin/parcels/add',
+    "add-parcel-service",
+    ["GET"],
+    'add-parcel'
+);
+$app->route(
+    '/admin/parcels/{parcel_number}/delete',
+    "delete-parcel-service",
+    ["GET"],
+    'delete-parcel'
+);
+$app->route(
+    '/admin/parcels/{parcel_number}/edit',
+    "edit-parcel-service",
+    ["GET"],
+    'edit-parcel'
 );
