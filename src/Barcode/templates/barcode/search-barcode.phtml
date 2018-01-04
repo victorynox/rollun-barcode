@@ -4,9 +4,15 @@
 
 <h2><a href="<?php echo $this->url("select-parcel") ?>">Parcel <?= $this->parcelNumber ?></a></h2>
 
+<style>
+    .top-buffer {
+        margin-top: 20px;
+    }
+</style>
+
 <?php /* Search form */ ?>
 <div class="row">
-    <div class="col-md-offset-4 col-md-4">
+    <div class="col-md-offset-3 col-md-4">
         <h3>Barcode scanning</h3>
         <form enctype="multipart/form-data"
               action="<?php echo $this->url('search-barcode', ["parcel_number" => $this->parcelNumber]) ?>"
@@ -21,19 +27,28 @@
 </div>
 
 <div class="row">
-    <div class="col-md-offset-1 col-md-4">
+    <div class="col-md-offset-1 col-md-12">
         <?php if (isset($this->barcode) && !empty($this->barcode)): ?>
-            <h4>Item with barcode: <?php echo $this->barcode ?></h4>
             <?php if (isset($this->notify)) : ?>
                 <p><?php echo $this->notify ?></p>
             <?php else: ?>
-                <h3>Item: <?php echo $this->info['part_number'] ?></h3>
-                <ul>
-                    <?php foreach ($this->info['quantity'] as $boxName => $boxQuantity): ?>
-                        <li><?= $boxName ?>: <?= $boxQuantity ?></li>
-                    <?php endforeach; ?>
-                </ul>
-                <img src="<?php echo $this->info['image_link'] ?>" style="width: 100%;">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h3>Barcode: <?php echo $this->barcode ?></h3>
+                        <h3>Part number: <?php echo $this->barcodeInfo['part_number'] ?></h3>
+                        <ul class="list-group">
+                            <?php if(!empty($this->barcodeInfo['quantity'])) : ?>
+                                <?php foreach ($this->barcodeInfo['quantity'] as $boxName => $boxQuantity): ?>
+                                    <li class="list-group-item"><?= $boxName ?>: <?= $boxQuantity ?></li>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <img class="img-rounded" src="<?php echo $this->barcodeInfo['image_link'] ?>" style="width: 100%;">
+                    </div>
+                </div>
+
             <?php endif; ?>
         <?php endif; ?>
     </div>

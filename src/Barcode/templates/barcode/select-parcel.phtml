@@ -1,15 +1,19 @@
 <?php $this->headTitle($this->title); ?>
 
 <h1 class="page-header"><?= $this->title ?></h1>
-
-<?php if (!empty($this->parcelNumbers)): ?>
-    <ul>
-        <?php foreach ($this->parcelNumbers as $parcelNumber): ?>
-            <li>
-                <a href="<?php echo $this->url('search-barcode', ["parcel_number" => $parcelNumber]) ?>"><?= $parcelNumber ?></a>
-            </li>
-        <?php endforeach; ?>
-    </ul>
-<?php else: ?>
-    <p>Parcel not exist.</p>
-<?php endif; ?>
+<div class="row">
+    <div class="col-md-offset-1 col-md-4">
+        <?php if (!empty($this->parcelNumbers)): ?>
+            <ul class="list-group">
+                <?php foreach ($this->parcelNumbers as $parcelNumber): ?>
+                    <li class="list-group-item">
+                        <a class="btn btn-default"
+                           href="<?php echo $this->url('search-barcode', ["parcel_number" => $parcelNumber]) ?>">Parcel <?= $parcelNumber ?></a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <p>Parcel not exist.</p>
+        <?php endif; ?>
+    </div>
+</div>
