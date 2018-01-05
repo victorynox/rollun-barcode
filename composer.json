@@ -5,11 +5,11 @@
     "homepage": "https://github.com/zendframework/zend-expressive-skeleton",
     "license": "BSD-3-Clause",
     "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "asset-installer-paths": {
-            "npm-asset-library": "public/assets/js"
+        "sort-packages": true,
+        "fxp-asset": {
+            "installer-paths": {
+                "npm-asset-library": "public/assets/js"
+            }
         }
     },
     "require": {
