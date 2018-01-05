@@ -127,6 +127,10 @@ class ConfigProvider
                 ActionRenderAbstractFactory::KEY_RENDER_MIDDLEWARE_SERVICE => "simpleHtmlJsonRendererLLPipe",
             ],
             //admins
+            "admin-index-service" => [
+                ActionRenderAbstractFactory::KEY_ACTION_MIDDLEWARE_SERVICE => Admin\Index::class,
+                ActionRenderAbstractFactory::KEY_RENDER_MIDDLEWARE_SERVICE => "simpleHtmlJsonRendererLLPipe",
+            ],
             "scans-info-service" => [
                 ActionRenderAbstractFactory::KEY_ACTION_MIDDLEWARE_SERVICE => Admin\ScansInfo::class,
                 ActionRenderAbstractFactory::KEY_RENDER_MIDDLEWARE_SERVICE => "simpleHtmlJsonRendererLLPipe",

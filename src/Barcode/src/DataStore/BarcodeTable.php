@@ -12,12 +12,43 @@ use Xiag\Rql\Parser\Query;
 
 class BarcodeTable extends SerializedDbTable implements BarcodeInterface
 {
+    const TABLE_NAME = "barcode";
+
     /**
      * @return string
      */
     public function getIdentifier()
     {
         return static::FIELD_ID;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTableConfig()
+    {
+        return [
+            static::TABLE_NAME => [
+                static::FIELD_ID => [
+
+                ],
+                static::FIELD_FNSKU => [
+
+                ],
+                static::FIELD_PART_NUMBER => [
+
+                ],
+                static::FIELD_PARCEL_NUMBER => [
+
+                ],
+                static::FIELD_IMAGE_LINK => [
+
+                ],
+                static::FIELD_QUANTITY_DATA => [
+
+                ],
+            ]
+        ];
     }
 
     /**
@@ -33,7 +64,7 @@ class BarcodeTable extends SerializedDbTable implements BarcodeInterface
     {
         $query = new RqlQuery();
         $query->setSelect(new AggregateSelectNode([
-            "count(".$this->getIdentifier().")",
+            "count(" . $this->getIdentifier() . ")",
             BarcodeInterface::FIELD_PARCEL_NUMBER
         ]));
         $query->setGroupby(new GroupbyNode([BarcodeInterface::FIELD_PARCEL_NUMBER]));

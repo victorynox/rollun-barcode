@@ -28,9 +28,6 @@
 
 /** @var \Zend\Expressive\Application $app */
 
-$app->get('/', App\Action\HomePageAction::class, 'home');
-$app->get('/api/ping', App\Action\PingAction::class, 'api.ping');
-
 if ($container->has('api-datastore')) {
     $app->route(
         '/api/datastore[/{resourceName}[/{id}]]',
@@ -38,25 +35,15 @@ if ($container->has('api-datastore')) {
         ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
         'api-datastore');
 }
-$app->route(
-    '/barcode',
-    "select-parcel-service",
-    ["GET"],
-    'select-parcel'
-);
-$app->route(
-    '/barcode/{parcel_number}',
-    "search-barcode-service",
-    ["GET"],
-    'search-barcode'
-);
 
 //admin
-// scans-info-service
-// delete-parcel-service
-// edit-parcel-service
-// add-parcel-service
-// view-parcels-service
+
+$app->route(
+    '/admin',
+    "admin-index-service",
+    ["GET"],
+    'admin-index'
+);
 
 $app->route(
     '/admin/scans_info',
@@ -88,4 +75,19 @@ $app->route(
     "edit-parcel-service",
     ["GET"],
     'edit-parcel'
+);
+
+//scaning
+$app->route(
+    '/',
+    "select-parcel-service",
+    ["GET"],
+    'select-parcel'
+);
+
+$app->route(
+    '/{parcel_number}',
+    "search-barcode-service",
+    ["GET"],
+    'search-barcode'
 );

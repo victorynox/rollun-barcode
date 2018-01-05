@@ -23,7 +23,6 @@ $aggregator = new ConfigAggregator([
     rollun\barcode\ConfigProvider::class,
     rollun\datastore\ConfigProvider::class,
     rollun\actionrender\ConfigProvider::class,
-    App\ConfigProvider::class,
     rollun\Crud\ConfigProvider::class,
 
     // Load application config in a pre-defined order in such a way that local settings

@@ -38,7 +38,7 @@ class AddParcel extends ParcelAbstract
         $responseData = [
             "parcelNumber" => $parcelNumber,
             "table" => [
-                "title" => "New Parcel",
+                "title" => "New '$parcelNumber' Parcel",
                 "dataStoreName" => ParcelBarcodeAspectAbstractFactory::SERVICE_NAME_PREFIX . $parcelNumber
             ],
         ];

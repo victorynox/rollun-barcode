@@ -31,7 +31,7 @@ class EditParcel extends ParcelAbstract
         $responseData = [
             "parcelNumber" => $parcelNumber,
             "table" => [
-                "title" => "Edit Parcel",
+                "title" => "Edit '$parcelNumber' Parcel",
                 "dataStoreName" => ParcelBarcodeAspectAbstractFactory::SERVICE_NAME_PREFIX . $parcelNumber
             ],
         ];
