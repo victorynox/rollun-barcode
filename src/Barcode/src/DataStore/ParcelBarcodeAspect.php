@@ -124,6 +124,19 @@ class ParcelBarcodeAspect extends AspectAbstract implements BarcodeInterface
     protected function repackBoxQuantity(array $item)
     {
         $boxQuantity = [];
+        //box4:21,box1:12
+        if(isset($item[static::FIELD_QUANTITY_DATA]) && is_string($item[static::FIELD_QUANTITY_DATA])) {
+            $data = Serializer::jsonUnserialize($item[static::FIELD_QUANTITY_DATA]);
+            if($data == null) {
+                $quantityStrings = explode(",", $item[static::FIELD_QUANTITY_DATA]);
+                foreach ($quantityStrings as $quantityString) {
+                    //0 - boxname
+                    //1 - quantity
+                    $data = explode(":", $quantityString);
+                    $boxQuantity[$data[0]] = isset($data[1]) ? $data[1] : 0;
+                }
+            }
+        }
         $pattern = '/' . static::BOX_NUMBER_QUANTITY_PREFIX . '(?<boxNumber>[\d]+)' . static::BOX_NUMBER_QUANTITY_POSTFIX . '/';
         foreach ($item as $key => $value) {
             if (preg_match($pattern, $key, $match) && !empty($value)) {

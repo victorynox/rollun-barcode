@@ -870,12 +870,12 @@
         },
         {
             "name": "npm-asset/rollun-js",
-            "version": "0.0.8",
+            "version": "0.0.10",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/rollun-js/-/rollun-js-0.0.8.tgz",
+                "url": "https://registry.npmjs.org/rollun-js/-/rollun-js-0.0.10.tgz",
                 "reference": null,
-                "shasum": "d25d7d628454d5487fe9d06c068518a39adcd736"
+                "shasum": "684fa4717a853e7bf4cb8f28b5ec9ab913672a2d"
             },
             "require-dev": {
                 "npm-asset/babel-cli": ">=6.23.0,<7.0.0",
@@ -923,7 +923,7 @@
             ],
             "description": "rollun-js",
             "homepage": "https://github.com/rollun-com/rollun-js#readme",
-            "time": "2018-01-05T09:09:37+00:00"
+            "time": "2018-01-05T12:04:33+00:00"
         },
         {
             "name": "npm-asset/rollun-rql",
@@ -1707,18 +1707,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/rollun-com/rollun-viewer.git",
-                "reference": "1f95334c7bebe14bc997574fe3bfb499d15450aa"
+                "reference": "09d37e265edb7c5c47b1628146d4c23c2d37d807"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rollun-com/rollun-viewer/zipball/1f95334c7bebe14bc997574fe3bfb499d15450aa",
-                "reference": "1f95334c7bebe14bc997574fe3bfb499d15450aa",
+                "url": "https://api.github.com/repos/rollun-com/rollun-viewer/zipball/09d37e265edb7c5c47b1628146d4c23c2d37d807",
+                "reference": "09d37e265edb7c5c47b1628146d4c23c2d37d807",
                 "shasum": ""
             },
             "require": {
                 "http-interop/http-middleware": "0.4.1",
                 "npm-asset/dojo-rql": "^0.3.1",
-                "npm-asset/rollun-js": "^0.0.8",
+                "npm-asset/rollun-js": "^0.0.10",
                 "php": "^5.6 || ^7.0",
                 "psr/log": "^1.0",
                 "rollun-com/rollun-actionrender": "^5.0",
@@ -1771,7 +1771,7 @@
                 }
             ],
             "description": "Skeleton for app or lib",
-            "time": "2018-01-05T09:10:14+00:00"
+            "time": "2018-01-05T12:09:38+00:00"
         },
         {
             "name": "seld/cli-prompt",

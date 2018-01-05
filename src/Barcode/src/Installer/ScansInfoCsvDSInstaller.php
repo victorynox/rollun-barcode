@@ -21,7 +21,7 @@ class ScansInfoCsvDSInstaller extends InstallerAbstract
 
     const CSV_DATASTORE = "barcodeScansInfo.csv";
 
-    const HEADER = "id,FNSKU,scanTime,ip";
+    const HEADER = "id,fnsku,parcel_number,scanTime,ip";
 
 
     public function __construct(ContainerInterface $container, IOInterface $ioComposer)

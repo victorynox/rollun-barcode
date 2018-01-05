@@ -60,6 +60,7 @@ class ConfigProvider
                 SearchBarcode::class => SearchBarcodeFactory::class,
                 SelectParcel::class => SelectParcelFactory::class,
 
+                Admin\Index::class => InvokableFactory::class,
                 Admin\ScansInfo::class => InvokableFactory::class,
                 Admin\DeleteParcel::class => Admin\Factory\DeleteParcelFactory::class,
                 Admin\EditParcel::class => Admin\Factory\EditParcelFactory::class,

@@ -15,6 +15,13 @@ $this->mainMenu()->addItem("Select parcel", $this->url("select-parcel"));
 ?>
 
 <?php /* Search form */ ?>
+
+<script>
+    function startBarcodeScanner() {
+        window.location.href = 'bwstw://startscanner?field=barcode_text';
+    }
+</script>
+
 <div class="row">
     <div class="col-md-offset-3 col-md-4">
         <h3>Barcode scanning</h3>
@@ -23,10 +30,13 @@ $this->mainMenu()->addItem("Select parcel", $this->url("select-parcel"));
               method="GET">
             <div class="form-group">
                 <label for="pwd"> Item barcode:</label>
-                <input class="form-control" name="barcode" type="text"/>
+                <input id="barcode_text" class="form-control" name="barcode" type="text" autofocus/>
                 <input class="btn btn-info" type="submit" value="View item"/>
             </div>
         </form>
+        <button type="button" onclick="javascript:startBarcodeScanner();" class="btn btn-success btn-lg">
+            Start Scanning
+        </button>
     </div>
 </div>
 
@@ -41,7 +51,7 @@ $this->mainMenu()->addItem("Select parcel", $this->url("select-parcel"));
                         <h3>Barcode: <?php echo $this->barcode ?></h3>
                         <h3>Part number: <?php echo $this->barcodeInfo['part_number'] ?></h3>
                         <ul class="list-group">
-                            <?php if(!empty($this->barcodeInfo['quantity'])) : ?>
+                            <?php if (!empty($this->barcodeInfo['quantity'])) : ?>
                                 <?php foreach ($this->barcodeInfo['quantity'] as $boxName => $boxQuantity): ?>
                                     <li class="list-group-item"><?= $boxName ?>: <?= $boxQuantity ?></li>
                                 <?php endforeach; ?>
@@ -49,7 +59,8 @@ $this->mainMenu()->addItem("Select parcel", $this->url("select-parcel"));
                         </ul>
                     </div>
                     <div class="col-md-4">
-                        <img class="img-rounded" src="<?php echo $this->barcodeInfo['image_link'] ?>" style="width: 100%;">
+                        <img class="img-rounded" src="<?php echo $this->barcodeInfo['image_link'] ?>"
+                             style="width: 100%;">
                     </div>
                 </div>
             <?php endif; ?>
