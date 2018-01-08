@@ -72,6 +72,7 @@ class ConfigProvider
             ],
             "aliases" => [
                 BarcodeInterface::class => BarcodeCsv::class,
+                "Barcode" => BarcodeInterface::class,
                 "ScansInfo" => ScansInfoInterface::class,
                 ScansInfoInterface::class => ScansInfoCsv::class
             ]
