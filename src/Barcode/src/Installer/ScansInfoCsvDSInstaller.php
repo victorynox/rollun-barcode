@@ -35,7 +35,7 @@ class ScansInfoCsvDSInstaller extends InstallerAbstract
      */
     protected function getStoragePath()
     {
-        return Command::getDataDir() . DIRECTORY_SEPARATOR . self::STORAGE_DIR . DIRECTORY_SEPARATOR . self::CSV_DATASTORE;
+        return Command::getDataDir() . self::STORAGE_DIR . DIRECTORY_SEPARATOR . self::CSV_DATASTORE;
     }
 
     /**
