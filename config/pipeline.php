@@ -35,6 +35,9 @@ $app->pipe(ServerUrlMiddleware::class);
 // - $app->pipe('/api', $apiMiddleware);
 // - $app->pipe('/docs', $apiDocMiddleware);
 // - $app->pipe('/files', $filesMiddleware);
+if ($container->has('identifyPipe')) {
+    $app->pipe('identifyPipe');
+}
 
 // Register the routing middleware in the middleware pipeline
 $app->pipeRoutingMiddleware();

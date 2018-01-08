@@ -69,6 +69,7 @@ class ConfigProvider
                 Admin\EditParcel::class => Admin\Factory\EditParcelFactory::class,
                 Admin\AddParcel::class => Admin\Factory\AddParcelFactory::class,
                 Admin\ViewParcels::class => Admin\Factory\ViewParcelsFactory::class,
+
             ],
             "aliases" => [
                 BarcodeInterface::class => BarcodeCsv::class,

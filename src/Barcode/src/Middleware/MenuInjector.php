@@ -9,6 +9,7 @@ use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use rollun\permission\Auth\Middleware\UserResolver;
+use Zend\Diactoros\Response;
 use Zend\Expressive\Helper\UrlHelper;
 
 /**
@@ -29,15 +30,15 @@ class MenuInjector implements MiddlewareInterface
         ],
         "admin-index" => [
             "title" => "Admin home",
-            "accessForRole" => "user",
+            "accessForRole" => "users",
         ],
         "scans-info" => [
             "title" => "Scans Info",
-            "accessForRole" => "user",
+            "accessForRole" => "users",
         ],
         "view-parcels" => [
             "title" => "View Parcels",
-            "accessForRole" => "user",
+            "accessForRole" => "users",
         ],
     ];
 
@@ -84,7 +85,10 @@ class MenuInjector implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $user = $request->getAttribute(UserResolver::KEY_ATTRIBUTE_USER, ["roles" => ["guest"]]);
+        $user = $request->getAttribute(UserResolver::KEY_ATTRIBUTE_USER);
+        if(!isset($user)) {
+            $user = ["roles" => ["guest"]];
+        }
 
         $responseData = [
             "main_menu" => $this->buildMainMenu($user['roles'])

@@ -27,6 +27,9 @@ class AddParcel extends ParcelAbstract
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
         $parcelNumber = $this->resolveParcelNumber($request);
+        if(!isset($parcelNumber) || empty($parcelNumber)) {
+            throw new InvalidMiddlewareException("Parcel number cant be empty!");
+        }
         $this->barcodeDataStore->create([
             BarcodeInterface::FIELD_PARCEL_NUMBER => $parcelNumber,
             BarcodeInterface::FIELD_ID => "empty_" . time(),
