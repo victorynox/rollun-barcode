@@ -11,6 +11,7 @@ use rollun\actionrender\Renderer\Html\HtmlParamResolver;
 use rollun\barcode\DataStore\BarcodeInterface as BarcodeDataStoreInterface;
 use rollun\barcode\DataStore\Factory\ParcelBarcodeAspectAbstractFactory;
 use rollun\barcode\DataStore\ScansInfoInterface as ScansInfoDataStoreInterface;
+use rollun\datastore\DataStore\DataStoreException;
 use rollun\utils\Json\Serializer;
 use Xiag\Rql\Parser\Node\LimitNode;
 use Xiag\Rql\Parser\Node\Query\LogicOperator\AndNode;
@@ -76,6 +77,35 @@ class SearchBarcode implements MiddlewareInterface
     }
 
     /**
+     * @param $fnsku
+     * @param $parcelNumber
+     * @return array
+     * @throws DataStoreException
+     */
+    protected function searchBarcode($fnsku, $parcelNumber)
+    {
+        //get barcode
+        $query = new Query();
+        $query->setQuery(new AndNode([
+            new EqNode(BarcodeDataStoreInterface::FIELD_PARCEL_NUMBER, $parcelNumber),
+            new EqNode(BarcodeDataStoreInterface::FIELD_FNSKU, $fnsku),
+        ]));
+        $query->setLimit(new LimitNode(1));
+        $result = $this->barcodeDataStore->query($query);
+
+        if(empty($result)) {
+            throw new DataStoreException("Item with same fnsku $fnsku not found in $parcelNumber parcel.");
+        }
+
+        $barcodeInfo = $result[0];
+        $barcodeInfo[BarcodeDataStoreInterface::FIELD_QUANTITY_DATA] =
+            is_string($barcodeInfo[BarcodeDataStoreInterface::FIELD_QUANTITY_DATA]) ?
+                Serializer::jsonUnserialize($barcodeInfo[BarcodeDataStoreInterface::FIELD_QUANTITY_DATA]) :
+                $barcodeInfo[BarcodeDataStoreInterface::FIELD_QUANTITY_DATA];
+        return $barcodeInfo;
+    }
+
+    /**
      * Process an incoming server request and return a response, optionally delegating
      * to the next middleware component to create the response.
      *
@@ -102,36 +132,25 @@ class SearchBarcode implements MiddlewareInterface
             $responseData["barcodeAspectName"] = ParcelBarcodeAspectAbstractFactory::SERVICE_NAME_PREFIX . $parcelNumber;
         } else {
             $fnsku = $queryParams[static::KEY_QUERY_BARCODE];
-            //get barcode
-            $query = new Query();
-            $query->setQuery(new AndNode([
-                new EqNode(BarcodeDataStoreInterface::FIELD_PARCEL_NUMBER, $parcelNumber),
-                new EqNode(BarcodeDataStoreInterface::FIELD_FNSKU, $fnsku),
-            ]));
-            $query->setLimit(new LimitNode(1));
-            $result = $this->barcodeDataStore->query($query);
+
             //logged scans
             $this->scansInfoDataStore->create([
                 ScansInfoDataStoreInterface::FIELD_FNSKU => $fnsku,
                 ScansInfoDataStoreInterface::FIELD_PARCEL_NUMBER => $parcelNumber,
                 ScansInfoDataStoreInterface::FIELD_SCAN_TIME => time(),
                 ScansInfoDataStoreInterface::FIELD_IP => $this->getClientIp($request),
-
             ]);
-
-            $responseData["barcode"] = $fnsku;
-            if (empty($result)) {
-                //TODO: refactor this.
-                $responseData['notify'] = "Item not found";
-            } else {
-                $barcodeInfo = $result[0];
-                $barcodeInfo[BarcodeDataStoreInterface::FIELD_QUANTITY_DATA] =
-                    is_string($barcodeInfo[BarcodeDataStoreInterface::FIELD_QUANTITY_DATA]) ?
-                        Serializer::jsonUnserialize($barcodeInfo[BarcodeDataStoreInterface::FIELD_QUANTITY_DATA]) :
-                        $barcodeInfo[BarcodeDataStoreInterface::FIELD_QUANTITY_DATA];
+            try {
+                $barcodeInfo = $this->searchBarcode($fnsku, $parcelNumber);
                 $responseData['barcodeInfo'] = $barcodeInfo;
+            } catch (DataStoreException $e) {
+                $responseData['notify'] = "Item not found.";
             }
+            $responseData["barcode"] = $fnsku;
         }
+
+        //We have priority by merged data
+        $responseData = array_merge_recursive($request->getAttribute("responseData", []), $responseData);
 
         $request = $request->withAttribute('responseData', $responseData);
         $request = $request->withAttribute(HtmlParamResolver::KEY_ATTRIBUTE_TEMPLATE_NAME, "barcode::search-barcode");

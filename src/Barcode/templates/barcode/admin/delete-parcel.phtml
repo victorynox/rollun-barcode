@@ -3,10 +3,7 @@
 <h1 class="page-header"><?= $this->title ?></h1>
 
 <?php
-$this->mainMenu()->addItem("Select parcel", $this->url("select-parcel"));
-$this->mainMenu()->addItem("Admin home", $this->url("admin-index"));
-$this->mainMenu()->addItem("Scans Info", $this->url("scans-info"));
-$this->mainMenu()->addItem("View Parcels", $this->url("view-parcels"));
+$this->mainMenu($this->main_menu ?: []);
 ?>
 
 <div class="row">

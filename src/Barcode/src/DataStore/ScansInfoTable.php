@@ -2,21 +2,15 @@
 
 namespace rollun\barcode\DataStore;
 
+use rollun\barcode\DataStore\Traits\ScansInfoTrait;
 use rollun\datastore\DataStore\SerializedDbTable;
 use rollun\datastore\TableGateway\TableManagerMysql;
 
 class ScansInfoTable extends SerializedDbTable implements ScansInfoInterface
 {
+    use ScansInfoTrait;
 
     const TABLE_NAME = "scans_info";
-
-    /**
-     * @return string
-     */
-    public function getIdentifier()
-    {
-        return static::FIELD_ID;
-    }
 
     /**
      * Return Db table config

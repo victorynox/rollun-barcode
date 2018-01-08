@@ -14,6 +14,8 @@ use rollun\barcode\DataStore\BarcodeInterface;
 use rollun\barcode\DataStore\Factory\ParcelBarcodeAspectAbstractFactory;
 use rollun\barcode\DataStore\ScansInfoCsv;
 use rollun\barcode\DataStore\ScansInfoInterface;
+use rollun\barcode\Middleware\Factory\MenuInjectorFactory;
+use rollun\barcode\Middleware\MenuInjector;
 use rollun\datastore\DataStore\Factory\CsvAbstractFactory;
 use rollun\datastore\DataStore\Factory\DataStoreAbstractFactory;
 use rollun\installer\Command;
@@ -57,6 +59,7 @@ class ConfigProvider
                 ParcelBarcodeAspectAbstractFactory::class
             ],
             'factories' => [
+                MenuInjector::class => MenuInjectorFactory::class,
                 SearchBarcode::class => SearchBarcodeFactory::class,
                 SelectParcel::class => SelectParcelFactory::class,
 

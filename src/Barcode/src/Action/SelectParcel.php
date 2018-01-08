@@ -48,6 +48,10 @@ class SelectParcel implements MiddlewareInterface
             'title' => "Select parcel",
             'parcelNumbers' => $this->barcodeDataStore->getParcelNumbers()
         ];
+
+        //We have priority by merged data
+        $responseData = array_merge_recursive($request->getAttribute("responseData", []), $responseData);
+
         $request = $request->withAttribute("responseData", $responseData);
         $request = $request->withAttribute(HtmlParamResolver::KEY_ATTRIBUTE_TEMPLATE_NAME, "barcode::select-parcel");
         $response = $delegate->process($request);

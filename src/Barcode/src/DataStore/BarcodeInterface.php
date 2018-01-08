@@ -6,16 +6,22 @@ use rollun\datastore\DataStore\Interfaces\DataStoresInterface;
 
 interface BarcodeInterface extends DataStoresInterface
 {
+    /** @const string - define */
     const FIELD_ID = self::DEF_ID;
 
+    /** @const string - define */
     const FIELD_FNSKU = "fnsku";
 
+    /** @const string - define */
     const FIELD_PART_NUMBER = "part_number";
 
+    /** @const string - define */
     const FIELD_PARCEL_NUMBER = "parcel_number";
 
+    /** @const string - define */
     const FIELD_IMAGE_LINK = "image_link";
 
+    /** @const string - define */
     const FIELD_QUANTITY_DATA = "quantity";
 
     /**

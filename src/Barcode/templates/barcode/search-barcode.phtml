@@ -11,7 +11,7 @@
 </style>
 
 <?php
-$this->mainMenu()->addItem("Select parcel", $this->url("select-parcel"));
+$this->mainMenu($this->main_menu ?: []);
 ?>
 
 <?php /* Search form */ ?>

@@ -1,7 +1,7 @@
 <?php $this->headTitle($this->title); ?>
 
 <?php
-$this->mainMenu()->addItem("Select parcel", $this->url("select-parcel"));
+$this->mainMenu($this->main_menu ?: []);
 ?>
 
 <h1 class="page-header"><?= $this->title ?></h1>

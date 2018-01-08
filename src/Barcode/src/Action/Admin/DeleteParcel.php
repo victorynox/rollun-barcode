@@ -38,6 +38,9 @@ class DeleteParcel extends ParcelAbstract
             $responseData['notify'] = "Success parcel removed.";
             return new RedirectResponse($this->urlHelper->generate("view-parcels"));
         }
+        //We have priority by merged data
+        $responseData = array_merge_recursive($request->getAttribute("responseData", []), $responseData);
+
         $request = $request->withAttribute('responseData', $responseData);
         $request = $request->withAttribute(HtmlParamResolver::KEY_ATTRIBUTE_TEMPLATE_NAME, "barcode::admin/delete-parcel");
 

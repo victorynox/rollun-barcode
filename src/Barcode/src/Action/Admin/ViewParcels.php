@@ -33,6 +33,10 @@ class ViewParcels extends ParcelAbstract
             'title' => "Index Parcel",
             'parcelNumbers' => $parcelNumbers,
         ];
+
+        //We have priority by merged data
+        $responseData = array_merge_recursive($request->getAttribute("responseData", []), $responseData);
+
         $request = $request->withAttribute('responseData', $responseData);
         $request = $request->withAttribute(HtmlParamResolver::KEY_ATTRIBUTE_TEMPLATE_NAME, "barcode::admin/view-parcels");
 
