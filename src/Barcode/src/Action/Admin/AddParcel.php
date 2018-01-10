@@ -54,18 +54,4 @@ class AddParcel extends ParcelAbstract
         $response = $delegate->process($request);
         return $response;
     }
-
-    /**
-     * @param ServerRequestInterface $request
-     * @throws InvalidMiddlewareException
-     * @return mixed
-     */
-    protected function resolveParcelNumber(ServerRequestInterface $request)
-    {
-        $queryParams = $request->getQueryParams();
-        if (!isset($queryParams[static::KEY_ATTRIBUTE_PARCEL_NUMBER])) {
-            throw new InvalidMiddlewareException("Not set " . static::KEY_ATTRIBUTE_PARCEL_NUMBER . " attribute.");
-        }
-        return $queryParams[static::KEY_ATTRIBUTE_PARCEL_NUMBER];
-    }
 }

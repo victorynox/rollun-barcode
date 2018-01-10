@@ -6,14 +6,20 @@
 $this->mainMenu($this->main_menu ?: []);
 ?>
 
-<div class="row">
-    <div class="col-md-8">
-        <h2>Confirm to remove parcel <?= $this->parcelNumber ?></h2>
-        <div class="col-md-4">
-            <a class="btn btn-danger" href="<?php echo $this->url('delete-parcel', [], ["confirm" => true]) ?>">Yes</a>
-        </div>
-        <div class="col-md-4">
-            <a class="btn btn-default" href="<?php echo $this->url('delete-parcel', [], ["confirm" => false]) ?>">No</a>
+<?php if(isset($this->confirm)) : ?>
+    <h2>Success removed <?= $this->parcelNumber ?>parcel</h2>
+    <a href="<?= $this->url("view-parcels");?>">Go to parcels</a>
+<?php else: ?>
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Confirm to remove parcel <?= $this->parcelNumber ?></h2>
+            <div class="col-md-4">
+                <a class="btn btn-danger" href="<?php echo $this->url('delete-parcel', [], ["confirm" => true]) ?>">Yes</a>
+            </div>
+            <div class="col-md-4">
+                <a class="btn btn-default" href="<?php echo $this->url('delete-parcel', [], ["confirm" => false]) ?>">No</a>
+            </div>
         </div>
     </div>
-</div>
+<?php endif; ?>
+

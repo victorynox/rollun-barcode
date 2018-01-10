@@ -1,6 +1,7 @@
 <?php
 
 use rollun\barcode\Middleware\MenuInjector;
+use rollun\barcode\Middleware\ParcelNumberResolver;
 use Zend\Expressive\Helper\ServerUrlMiddleware;
 use Zend\Expressive\Helper\UrlHelperMiddleware;
 use Zend\Expressive\Middleware\ImplicitHeadMiddleware;
@@ -45,6 +46,7 @@ $app->pipe(ImplicitHeadMiddleware::class);
 $app->pipe(ImplicitOptionsMiddleware::class);
 $app->pipe(UrlHelperMiddleware::class);
 $app->pipe(MenuInjector::class);
+$app->pipe(ParcelNumberResolver::class);
 
 // Add more middleware here that needs to introspect the routing results; this
 // might include:

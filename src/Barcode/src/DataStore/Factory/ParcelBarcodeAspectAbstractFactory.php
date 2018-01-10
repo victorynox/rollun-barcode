@@ -79,6 +79,9 @@ class ParcelBarcodeAspectAbstractFactory implements AbstractFactoryInterface
             throw new ServiceNotCreatedException("Requested service $requestedName is not ParcelBarcodeAspect compatible.");
         }
         $parcelNumber = $match['parcel_number'];
+        //Cunt
+        $parcelNumber = trim($parcelNumber);
+        $parcelNumber = rawurldecode($parcelNumber);
         return new ParcelBarcodeAspect($dataStore, $parcelNumber);
     }
 }

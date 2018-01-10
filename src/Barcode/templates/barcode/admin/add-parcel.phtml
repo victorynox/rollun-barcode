@@ -7,3 +7,16 @@ $this->mainMenu($this->main_menu ?: []);
 ?>
 
 <?= $this->crudTable($this->url("api-datastore", ["resourceName" => $this->table['dataStoreName']]), $this->table['title']) ?>
+<?= $this->importer([
+    "noId" => true,
+    "importFields" => [
+        "FNSKU",
+        "Rockypart",
+        "Imagelink",
+        "Box1quantity",
+        "Box2quantity",
+        "Box3quantity",
+        "Box4quantity",
+        "Box5quantity",
+    ],
+]) ?>

@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use rollun\actionrender\Renderer\Html\HtmlParamResolver;
 use rollun\barcode\DataStore\Factory\ParcelBarcodeAspectAbstractFactory;
+use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Expressive\Helper\UrlHelper;
 
@@ -35,9 +36,9 @@ class DeleteParcel extends ParcelAbstract
 
         if(isset($queryParams["confirm"]) && $queryParams["confirm"] == true) {
             $this->barcodeDataStore->deleteParcel($parcelNumber);
-            $responseData['notify'] = "Success parcel removed.";
-            return new RedirectResponse($this->urlHelper->generate("view-parcels"));
+            $responseData["confirm"] = true;
         }
+
         //We have priority by merged data
         $responseData = array_merge_recursive($request->getAttribute("responseData", []), $responseData);
 
