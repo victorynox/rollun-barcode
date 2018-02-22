@@ -93,7 +93,7 @@ trait BarcodeTrait
         foreach ($result as $item) {
             $parcelNumbers[] = $item[BarcodeInterface::FIELD_PARCEL_NUMBER];
         }
-        return $parcelNumbers;
+        return array_reverse($parcelNumbers);
     }
 
     /**
